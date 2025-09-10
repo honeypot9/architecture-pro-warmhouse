@@ -1,0 +1,24 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+skinparam wrapWidth 300
+
+   title
+     <b>Задание 2. Проектирование микросервисной архитектуры</b>
+     <i>Визуализация компонентов домена управления телеметрии</i>
+   end title
+
+    Container(telemetry_domain, "Управление телеметрией устройств") {
+        Component(incomingTelemetry, "Телеметрия")
+		Component(state, "Состояние устройства")
+        Component(dataStorage, "Аналитические данные")
+        Component(dataApi, "API устройства")
+    }
+
+System_Ext(device, "Устройство")
+
+Rel(incomingTelemetry, device, "Входящие технические показания от устройства")
+Rel(state, device, "Хранение состояния устройства")
+Rel(dataStorage, device, "Хранение логов данных для аналитики")
+Rel(dataApi, device, "API для внешних сервисов")
+@enduml

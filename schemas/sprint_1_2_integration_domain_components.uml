@@ -1,0 +1,20 @@
+ @startuml
+ !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+ skinparam wrapWidth 300
+
+  title
+    <b>Задание 2. Проектирование микросервисной архитектуры</b>
+    <i>Визуализация компонентов домена управления интеграцией устройств</i>
+  end title
+
+     Container(integration_domain, "Управление интеграцией устройств") {
+         Component(deviceProtocolRegistry, "Реестр протоколов")
+         Component(supportedDeviceCatalog, "Каталог поддерживаемых устройств")
+     }
+
+ System_Ext(device, "Устройство")
+
+ Rel(deviceProtocolRegistry, device, "Адаптер для работы с устройством")
+ Rel(supportedDeviceCatalog, device, "Поддержка устройства в списке доступных устройств")
+ @enduml

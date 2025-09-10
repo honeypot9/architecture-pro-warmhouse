@@ -1,0 +1,92 @@
+@startuml
+
+' Entities
+entity "User" as user {
+  * user_id : UUID
+  --
+  * email : VARCHAR
+  password_hash : VARCHAR
+  first_name : VARCHAR
+  last_name : VARCHAR
+  created_at : TIMESTAMP
+}
+
+entity "Household" as household {
+  * household_id : UUID
+  --
+  * owner_id : UUID
+  * name : VARCHAR
+  address : TEXT
+  timezone : VARCHAR
+}
+
+entity "DeviceModel" as devicemodel {
+  * device_model_id : UUID
+  --
+  * manufacturer : VARCHAR
+  * model_name : VARCHAR
+  * model_number : VARCHAR
+  description : TEXT
+  type : ENUM
+  supported_commands : JSON
+}
+
+entity "Device" as device {
+  * device_id : UUID
+  --
+  * device_model_id : UUID
+  * household_id : UUID
+  * name : VARCHAR
+  location : VARCHAR
+  * serial_number : VARCHAR
+  is_online : BOOLEAN
+  last_seen_at : TIMESTAMP
+  metadata : JSON
+}
+
+entity "TelemetryData" as telemetry {
+  * telemetry_id : BIGSERIAL
+  --
+  * device_id : UUID
+  * timestamp : TIMESTAMP
+  * metric_type : VARCHAR
+  * value : DOUBLE PRECISION
+}
+
+entity "Scenario" as scenario {
+  * scenario_id : UUID
+  --
+  * household_id : UUID
+  * name : VARCHAR
+  description : TEXT
+  is_active : BOOLEAN
+  created_at : TIMESTAMP
+}
+
+entity "ScenarioTrigger" as trigger {
+  * trigger_id : UUID
+  --
+  * scenario_id : UUID
+  * trigger_type : ENUM
+  condition : JSON
+}
+
+entity "ScenarioAction" as action {
+  * action_id : UUID
+  --
+  * scenario_id : UUID
+  * action_type : ENUM
+  execution_order : INT
+  parameters : JSON
+}
+
+' Relationships
+user ||--o{ household : "owns"
+household ||--o{ device : "contains"
+household ||--o{ scenario : "has"
+devicemodel ||--o{ device : "is model of"
+device ||--o{ telemetry : "generates"
+scenario ||--o{ trigger : "initiates on"
+scenario ||--o{ action : "performs"
+
+@enduml
