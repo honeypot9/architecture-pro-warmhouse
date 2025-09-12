@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8082",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Onboarding",
+      "description": "API для управления процессом онбординга устройств"
+    }
+  ],
+  "paths": {
+    "/onboardings/{onboardingId}/complete": {
+      "post": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Завершить процесс онбординга",
+        "operationId": "completeOnboarding",
+        "parameters": [
+          {
+            "name": "onboardingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingCompleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/onboarding/start": {
+      "post": {
+        "tags": [
+          "Onboarding"
+        ],
+        "summary": "Начать процесс онбординга устройства",
+        "operationId": "startOnboarding",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnboardingStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actuator/health": {
+      "get": {
+        "tags": [
+          "health-controller"
+        ],
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OnboardingCompleteRequest": {
+        "required": [
+          "verificationCode"
+        ],
+        "type": "object",
+        "properties": {
+          "verificationCode": {
+            "type": "string"
+          }
+        }
+      },
+      "OnboardingStartRequest": {
+        "required": [
+          "deviceModel",
+          "serialNumber",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceModel": {
+            "type": "string"
+          },
+          "serialNumber": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  }
+}

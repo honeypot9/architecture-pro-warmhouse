@@ -1,0 +1,22 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+skinparam wrapWidth 300
+
+ title
+   <b>Задание 2. Проектирование микросервисной архитектуры</b>
+   <i>Визуализация компонентов домена управления пользователями</i>
+ end title
+
+    Container(user_domain, "Управление пользователями") {
+        Component(userManagement, "Управление пользователями")
+        Component(authorization, "Авторизация")
+        Component(sessionManagement, "Управление сессией пользователя")
+    }
+
+Person_Ext(user, "Пользователь")
+
+Rel(userManagement, user, "Регистрация, аутентификация")
+Rel(authorization, user, "Управление ролями и правами")
+Rel(sessionManagement, user, "Управление сессиями пользователей")
+@enduml

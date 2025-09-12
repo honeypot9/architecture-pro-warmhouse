@@ -1,0 +1,28 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+skinparam wrapWidth 300
+
+ title
+   <b>Задание 2. Проектирование микросервисной архитектуры</b>
+   <i>Визуализация контекста системы To Be — диаграмма С4</i>
+ end title
+
+ Enterprise_Boundary(warmhouse, "Система отопления To Be") {
+   Container(device_domain, "Управление устройствами", "device", "kotlin")
+   Container(integration_domain, "Управление интеграцией устройств", "integration", "kotlin")
+   Container(telemetry_domain, "Управление телеметрией устройств", "telemetry", "kotlin")
+   Container(user_domain, "Управление пользователями", "user", "kotlin")
+   Container(device_scenario_domain, "Управление пользовательскими сценариями", "scenario", "kotlin")
+ }
+
+ Person_Ext(user, "Пользователи")
+ System_Ext(device, "Устройства")
+
+ Rel_U(device_domain, device, "Подключение/отключение устройств")
+ Rel_U(telemetry_domain, device, "Мониторинг и телеметрия устройств")
+ Rel_U(integration_domain, device, "Поддержка протоколов устройств")
+ Rel_U(user_domain, user, "Учет пользователей")
+ Rel_U(device_scenario_domain, user, "Создание пользовательских сценариев")
+
+@enduml

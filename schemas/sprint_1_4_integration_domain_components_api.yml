@@ -1,0 +1,874 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8085",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Device Catalog",
+      "description": "API для управления каталогом устройств"
+    },
+    {
+      "name": "Integration Testing",
+      "description": "API для тестирования интеграции устройств"
+    },
+    {
+      "name": "Protocol Registry",
+      "description": "API для управления поддерживаемыми протоколами"
+    }
+  ],
+  "paths": {
+    "/protocols": {
+      "get": {
+        "tags": [
+          "Protocol Registry"
+        ],
+        "summary": "Получение списка поддерживаемых протоколов",
+        "operationId": "getProtocols",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "enabled",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtocolListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Protocol Registry"
+        ],
+        "summary": "Добавление нового протокола",
+        "operationId": "createProtocol",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProtocolCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtocolResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integration-test": {
+      "post": {
+        "tags": [
+          "Integration Testing"
+        ],
+        "summary": "Тестирование интеграции устройства",
+        "operationId": "testIntegration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegrationTestRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationTestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device-models": {
+      "get": {
+        "tags": [
+          "Device Catalog"
+        ],
+        "summary": "Получение каталога устройств",
+        "operationId": "getDeviceModels",
+        "parameters": [
+          {
+            "name": "protocol",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "manufacturer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceModelListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Device Catalog"
+        ],
+        "summary": "Добавление модели устройства в каталог",
+        "operationId": "createDeviceModel",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceModelCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceModelResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/protocols/{protocol_id}": {
+      "get": {
+        "tags": [
+          "Protocol Registry"
+        ],
+        "summary": "Получение информации о протоколе",
+        "operationId": "getProtocol",
+        "parameters": [
+          {
+            "name": "protocol_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProtocolDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integration-test/{test_id}": {
+      "get": {
+        "tags": [
+          "Integration Testing"
+        ],
+        "summary": "Получение результатов тестирования",
+        "operationId": "getTestResult",
+        "parameters": [
+          {
+            "name": "test_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationTestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/device-models/{model_id}": {
+      "get": {
+        "tags": [
+          "Device Catalog"
+        ],
+        "summary": "Получение информации о модели устройства",
+        "operationId": "getDeviceModel",
+        "parameters": [
+          {
+            "name": "model_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceModelDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actuator/health": {
+      "get": {
+        "tags": [
+          "health-controller"
+        ],
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProtocolCreateRequest": {
+        "required": [
+          "category",
+          "enabled",
+          "name",
+          "securityFeatures",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specificationUrl": {
+            "type": "string"
+          },
+          "securityFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProtocolResponse": {
+        "required": [
+          "category",
+          "createdAt",
+          "enabled",
+          "id",
+          "name",
+          "updatedAt",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specificationUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IntegrationTestRequest": {
+        "required": [
+          "deviceModel",
+          "protocol",
+          "testType"
+        ],
+        "type": "object",
+        "properties": {
+          "protocol": {
+            "type": "string"
+          },
+          "deviceModel": {
+            "type": "string"
+          },
+          "testType": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "IntegrationTestResponse": {
+        "required": [
+          "deviceModel",
+          "protocol",
+          "startedAt",
+          "status",
+          "testId"
+        ],
+        "type": "object",
+        "properties": {
+          "testId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "deviceModel": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "results": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "errorMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceImageDto": {
+        "required": [
+          "type",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceModelCreateRequest": {
+        "required": [
+          "capabilities",
+          "category",
+          "images",
+          "manufacturer",
+          "name",
+          "protocol",
+          "supportedCommands"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supportedCommands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "configurationTemplate": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceImageDto"
+            }
+          },
+          "documentationUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceModelResponse": {
+        "required": [
+          "capabilities",
+          "category",
+          "createdAt",
+          "id",
+          "manufacturer",
+          "name",
+          "protocol",
+          "supportedCommands",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supportedCommands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ProtocolListResponse": {
+        "required": [
+          "protocols",
+          "totalCount"
+        ],
+        "type": "object",
+        "properties": {
+          "protocols": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProtocolSummary"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProtocolSummary": {
+        "required": [
+          "category",
+          "enabled",
+          "id",
+          "name",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxDevices": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ProtocolDetailResponse": {
+        "required": [
+          "category",
+          "createdAt",
+          "enabled",
+          "id",
+          "name",
+          "securityFeatures",
+          "updatedAt",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxDevices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specificationUrl": {
+            "type": "string"
+          },
+          "securityFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DeviceModelListResponse": {
+        "required": [
+          "deviceModels",
+          "totalCount"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceModelSummary"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "DeviceModelSummary": {
+        "required": [
+          "capabilities",
+          "category",
+          "id",
+          "manufacturer",
+          "name",
+          "protocol",
+          "supportedCommands"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supportedCommands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DeviceModelDetailResponse": {
+        "required": [
+          "capabilities",
+          "category",
+          "createdAt",
+          "id",
+          "images",
+          "manufacturer",
+          "name",
+          "protocol",
+          "supportedCommands",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "manufacturer": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supportedCommands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "configurationTemplate": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceImageDto"
+            }
+          },
+          "documentationUrl": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

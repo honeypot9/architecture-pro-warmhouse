@@ -1,0 +1,96 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Code.puml
+
+title Диаграмма кода C4: Device Registry
+
+'-------controller layer--------
+Component(QueryController, "DeviceQueryController", "REST Controller")
+Component(StatusController, "DeviceStatusController", "REST Controller")
+
+'-------service layer-----------
+Component(QueryService, "DeviceQueryService", "Spring Service")
+Component(StatusService, "DeviceStatusService", "Spring Service")
+
+'-------repository layer---------
+Component(DeviceRepo, "DeviceRepository", "JPA Repository")
+
+'---------------util-------------
+Component(DeviceMapper, "DeviceMapper", "util component")
+
+'----event------------
+Component(EventConsumer, "DeviceStatusEventConsumer", "status change consumer")
+
+'----external------------
+Component(RoomClient, "RoomServiceClient", "Feign Client", "проверка наличия комнат")
+Component(DeviceTypeClient, "DeviceTypeServiceClient", "Feign Client", "получение информации о типах устройств")
+Component(KafkaExternal, "Kafka Broker", "External System", "Брокер сообщений для событий устройств")
+
+'----relation---------
+Rel(QueryController, QueryService, "вызывает", "HTTP")
+Rel(StatusController, StatusService, "вызывает", "HTTP")
+
+Rel(QueryService, DeviceRepo, "выполняет запросы", "JDBC")
+Rel(QueryService, DeviceMapper, "использует для преобразования", "Java")
+Rel(QueryService, RoomClient, "проверяет существование комнат", "HTTP")
+Rel(QueryService, DeviceTypeClient, "получает информацию о типах", "HTTP")
+
+Rel(StatusService, DeviceRepo, "резервные запросы (fallback)", "JDBC")
+
+Rel(EventConsumer, StatusService, "обновляет статусы", "Java")
+Rel(EventConsumer, KafkaExternal, "события устройств", "Kafka Protocol")
+
+'---------interface--------------
+AddElementTag("rest-controller", $bgColor="lightblue")
+AddElementTag("service", $bgColor="lightgreen")
+AddElementTag("repository", $bgColor="lightyellow")
+AddElementTag("client", $bgColor="lightpink")
+AddElementTag("external", $bgColor="lightgrey")
+
+UpdateElementStyle(QueryController, $tag="rest-controller")
+UpdateElementStyle(StatusController, $tag="rest-controller")
+UpdateElementStyle(QueryService, $tag="service")
+UpdateElementStyle(StatusService, $tag="service")
+UpdateElementStyle(DeviceRepo, $tag="repository")
+UpdateElementStyle(RoomClient, $tag="client")
+UpdateElementStyle(DeviceTypeClient, $tag="client")
+UpdateElementStyle(KafkaExternal, $tag="external")
+
+'---------implement------------
+Note right of QueryController {
+  <b>DeviceQueryController</b>
+  - getDevice(tenantId, deviceId)
+  - getDevicesByRoom(tenantId, roomId)
+  - getDevicesByType(tenantId, deviceTypeId)
+  - getDeviceStatistics(tenantId)
+}
+
+Note right of StatusController {
+  <b>DeviceStatusController</b>
+  - getDeviceStatus(tenantId, deviceId)
+  - getDevicesStatus(tenantId, deviceIds)
+}
+
+Note right of QueryService {
+  <b>DeviceQueryService</b>
+  - getDevice(tenantId, deviceId): Device
+  - getDevicesByRoom(tenantId, roomId): List<Device>
+  - getDevicesByType(tenantId, deviceTypeId): List<Device>
+  - getDeviceStatistics(tenantId): DeviceStatistics
+}
+
+Note right of StatusService {
+  <b>DeviceStatusService</b>
+  - getDeviceStatus(tenantId, deviceId): DeviceStatus
+  - updateDeviceStatus(deviceId, status, lastSeen): void
+}
+
+Note left of DeviceRepo {
+  <b>DeviceRepository</b>
+  - findByTenantIdAndId(tenantId, id)
+  - findByTenantId(tenantId)
+  - findByTenantIdAndRoomId(tenantId, roomId)
+  - findByTenantIdAndDeviceTypeId(tenantId, deviceTypeId)
+  - findAll(specification, pageable)
+}
+
+@enduml

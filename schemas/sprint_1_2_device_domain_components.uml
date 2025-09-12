@@ -1,0 +1,22 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+skinparam wrapWidth 300
+
+ title
+   <b>Задание 2. Проектирование микросервисной архитектуры</b>
+   <i>Визуализация компонентов домена устройств</i>
+ end title
+
+    Container(device_domain, "Управление устройствами") {
+        Component(deviceRegistry, "Реестр устройств")
+        Component(deviceOnboarding, "Онбординг устройства")
+        Component(deviceConfig, "Конфигурация устройства")
+    }
+
+System_Ext(device, "Устройства")
+
+Rel(deviceRegistry, device, "Ведение реестра устройств")
+Rel(deviceOnboarding, device, "Подключение устройства в систему")
+Rel(deviceConfig, device, "Конфигурация подключаемого устройства")
+@enduml

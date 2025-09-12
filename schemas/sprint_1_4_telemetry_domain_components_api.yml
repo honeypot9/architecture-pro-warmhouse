@@ -1,0 +1,418 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8086",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Device State",
+      "description": "API для управления состоянием устройств"
+    },
+    {
+      "name": "Telemetry Ingestion",
+      "description": "API для приема телеметрических данных"
+    },
+    {
+      "name": "Data API",
+      "description": "API для аналитических данных"
+    },
+    {
+      "name": "Data Storage",
+      "description": "API для работы с историческими данными"
+    }
+  ],
+  "paths": {
+    "/telemetry": {
+      "post": {
+        "tags": [
+          "Telemetry Ingestion"
+        ],
+        "summary": "Отправка телеметрических данных",
+        "operationId": "sendTelemetry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelemetryDataRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryAcceptanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/telemetry/history": {
+      "get": {
+        "tags": [
+          "Data Storage"
+        ],
+        "summary": "Получение исторических данных телеметрии",
+        "operationId": "getTelemetryHistory",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "aggregation",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "raw"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryHistoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/devices/{deviceId}/state": {
+      "get": {
+        "tags": [
+          "Device State"
+        ],
+        "summary": "Получение текущего состояния устройства",
+        "operationId": "getDeviceState",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceStateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/summary": {
+      "get": {
+        "tags": [
+          "Data API"
+        ],
+        "summary": "Получение аналитической сводки",
+        "operationId": "getAnalyticsSummary",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metric",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "day"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actuator/health": {
+      "get": {
+        "tags": [
+          "health-controller"
+        ],
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TelemetryDataRequest": {
+        "required": [
+          "deviceId",
+          "metrics",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "TelemetryAcceptanceResponse": {
+        "required": [
+          "acceptedAt",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "acceptedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recordId": {
+            "type": "string"
+          }
+        }
+      },
+      "TelemetryDataPoint": {
+        "required": [
+          "timestamp",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "TelemetryHistoryResponse": {
+        "required": [
+          "aggregation",
+          "data",
+          "deviceId"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "aggregation": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TelemetryDataPoint"
+            }
+          }
+        }
+      },
+      "DeviceStateResponse": {
+        "required": [
+          "deviceId",
+          "lastSeen",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string"
+          },
+          "lastSeen": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "state": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "AnalyticsStats": {
+        "required": [
+          "avg",
+          "count",
+          "max",
+          "min"
+        ],
+        "type": "object",
+        "properties": {
+          "avg": {
+            "type": "number",
+            "format": "double"
+          },
+          "min": {
+            "type": "number",
+            "format": "double"
+          },
+          "max": {
+            "type": "number",
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AnalyticsSummaryResponse": {
+        "required": [
+          "date",
+          "deviceId",
+          "metric",
+          "period",
+          "stats"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string"
+          },
+          "metric": {
+            "type": "string"
+          },
+          "period": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "stats": {
+            "$ref": "#/components/schemas/AnalyticsStats"
+          }
+        }
+      }
+    }
+  }
+}

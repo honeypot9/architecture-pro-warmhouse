@@ -1,0 +1,25 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+skinparam wrapWidth 300
+
+
+ title
+   <b>Задание 1. Анализ и планирование</b>
+  <i>5. Визуализация контекста системы As Is — диаграмма С4</i>
+ end title
+
+ Enterprise_Boundary(warmhouse, "Домен управлением системой отопления") {
+   Container(monitoringdomain, "Мониторинг", "monitoring")
+   Container(sensordomain, "Управление датчиками", "sensor")
+   Container(userdomain, "Управление пользователями", "user")
+ }
+
+ Person_Ext(user, "Пользователи")
+ System_Ext(sensor, "Датчики")
+
+ Rel_U(sensordomain, sensor, "Управление датчиками")
+ Rel_U(userdomain, user, "Подключение пользователей")
+ Rel_U(monitoringdomain, sensor, "Мониторинг температуры")
+
+@enduml
