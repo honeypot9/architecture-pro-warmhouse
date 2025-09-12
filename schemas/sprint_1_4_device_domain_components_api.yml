@@ -17,7 +17,7 @@
     }
   ],
   "paths": {
-    "/onboarding/{onboardingId}/complete": {
+    "/onboardings/{onboardingId}/complete": {
       "post": {
         "tags": [
           "Onboarding"

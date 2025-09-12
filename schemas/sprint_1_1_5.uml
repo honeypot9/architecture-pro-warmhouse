@@ -9,7 +9,7 @@ skinparam wrapWidth 300
   <i>5. Визуализация контекста системы As Is — диаграмма С4</i>
  end title
 
- Enterprise_Boundary(warmhouse, "Система отопления As Is") {
+ Enterprise_Boundary(warmhouse, "Домен управлением системой отопления") {
    Container(monitoringdomain, "Мониторинг", "monitoring")
    Container(sensordomain, "Управление датчиками", "sensor")
    Container(userdomain, "Управление пользователями", "user")

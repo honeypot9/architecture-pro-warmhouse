@@ -1,5 +1,4 @@
 @startuml
-
 ' Entities
 entity "User" as user {
   * user_id : UUID
@@ -81,12 +80,11 @@ entity "ScenarioAction" as action {
 }
 
 ' Relationships
-user ||--o{ household : "owns"
+user }o--o{ household : "owns"
 household ||--o{ device : "contains"
 household ||--o{ scenario : "has"
 devicemodel ||--o{ device : "is model of"
 device ||--o{ telemetry : "generates"
 scenario ||--o{ trigger : "initiates on"
 scenario ||--o{ action : "performs"
-
 @enduml

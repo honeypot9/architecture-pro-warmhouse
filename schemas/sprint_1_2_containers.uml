@@ -9,11 +9,11 @@ skinparam wrapWidth 300
  end title
 
  Enterprise_Boundary(warmhouse, "Система отопления To Be") {
-   Container(device_domain, "Управление устройствами", "device")
-   Container(integration_domain, "Управление интеграцией устройств", "integration")
-   Container(telemetry_domain, "Управление телеметрией устройств", "telemetry")
-   Container(user_domain, "Управление пользователями", "user")
-   Container(device_scenario_domain, "Управление пользовательскими сценариями", "scenario")
+   Container(device_domain, "Управление устройствами", "device", "kotlin")
+   Container(integration_domain, "Управление интеграцией устройств", "integration", "kotlin")
+   Container(telemetry_domain, "Управление телеметрией устройств", "telemetry", "kotlin")
+   Container(user_domain, "Управление пользователями", "user", "kotlin")
+   Container(device_scenario_domain, "Управление пользовательскими сценариями", "scenario", "kotlin")
  }
 
  Person_Ext(user, "Пользователи")
